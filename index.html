@@ -1594,62 +1594,82 @@ input, select, textarea {
             <p style="font-size:12px; opacity:0.8; text-align:center;">نظام محلي كامل - يعمل بدون إنترنت</p>
         </div>
 
-        <div class="glass-card">
-            <h3 style="color:var(--gold); font-size:16px; margin-top:0;"><i class="fas fa-bolt"></i> الوصول السريع</h3>
-            
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                <button class="btn btn-green" onclick="setupInvoice('sale', 'cash')"><i class="fas fa-shopping-cart"></i> بيع كاش</button>
-                <button class="btn btn-red" onclick="setupInvoice('sale', 'credit')"><i class="fas fa-clock"></i> بيع آجل</button>
-            </div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
-                <button class="btn" style="background:var(--blue)" onclick="setupInvoice('purchase', 'cash')"><i class="fas fa-truck"></i> شراء كاش</button>
-                <button class="btn" style="background:var(--orange)" onclick="setupInvoice('purchase', 'credit')"><i class="fas fa-calendar"></i> شراء آجل</button>
-            </div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
-                <button class="btn btn-purple" onclick="setupInvoice('sale_return', 'cash')"><i class="fas fa-undo-alt"></i> مرتجع بيع</button>
-                <button class="btn btn-pink" onclick="setupInvoice('purchase_return', 'cash')"><i class="fas fa-exchange-alt"></i> مرتجع شراء</button>
-            </div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
-                <button class="btn btn-cyan" onclick="openPaymentModal('receipt')"><i class="fas fa-hand-holding-usd"></i> سند قبض</button>
-                <button class="btn" style="background: #f59e0b;" onclick="openPaymentModal('payment')"><i class="fas fa-money-bill-wave"></i> سند صرف</button>
-            </div>
+       <div class="glass-card">
+    <h3 style="color:var(--gold); font-size:16px; margin-top:0;"><i class="fas fa-bolt"></i> القائمة الرئيسية</h3>
+    
+    <!-- الأزرار الرئيسية الأربعة -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        <button class="btn btn-gold" id="toggleInvoicesBtn" onclick="toggleSection('invoicesSection')">
+            <i class="fas fa-file-invoice"></i> 📋 الفواتير
+        </button>
+        <button class="btn btn-cyan" id="togglePaymentsBtn" onclick="toggleSection('paymentsSection')">
+            <i class="fas fa-hand-holding-usd"></i> 💰 السندات
+        </button>
+        <button class="btn" style="background:#0f9d58;" id="toggleBackupBtn" onclick="toggleSection('backupSection')">
+            <i class="fas fa-cloud-upload-alt"></i> 💾 النسخ والاستعادة
+        </button>
+        <button class="btn btn-purple" id="toggleManagementBtn" onclick="toggleSection('managementSection')">
+            <i class="fas fa-cogs"></i> ⚙️ الإدارة
+        </button>
+    </div>
 
-            <button class="btn btn-statement" style="margin-top:10px;" onclick="openStatementModal()"><i class="fas fa-file-invoice"></i> 📑 كشف حساب</button>
-            
-            <h3 style="color:var(--gold); font-size:14px; margin:15px 0 5px;">إدارة البيانات</h3>
-            <div class="management-grid">
-            <button class="btn btn-gold" onclick="openAddProductModal()"><i class="fas fa-box"></i> صنف جديد</button>
-                <button class="btn btn-indigo" onclick="openAddCustomerModal()"><i class="fas fa-user-plus"></i> عميل جديد</button>
-                <button class="btn" style="background:#d97706" onclick="openAddSupplierModal()"><i class="fas fa-truck"></i> مورد جديد</button>
-                <button class="btn btn-gold" onclick="openPriceManager()"><i class="fas fa-tags"></i> تعديل الأسعار</button>
-                <button class="btn" style="background:#d97706;" onclick="openSecurityModal()"><i class="fas fa-shield-alt"></i> 🔒 الأمان</button>
-                <button class="btn" style="background:#6366f1;" onclick="archiveYearToDrive()"><i class="fas fa-archive"></i> 📦 أرشفة سنة</button>
-<button class="btn" style="background:#d97706;" onclick="showYearlyClosing()"><i class="fas fa-calendar-check"></i> 📅 الحساب الختامي</button>
-<button class="btn" style="background:#8b5cf6;" onclick="restoreYearFromDrive()"><i class="fas fa-folder-open"></i> 📂 استعادة سنة</button>
-<button class="btn" style="background:#8b5cf6;" onclick="showCurrentBalances()">⚖️ الأرصدة الحالية</button>
-            </div>
-            
-            <button class="btn btn-blue" style="margin-top:10px;" onclick="searchCustomerInvoices()"><i class="fas fa-search"></i> بحث شامل</button>
-            <button class="btn" style="background:#8b5cf6; margin-top:10px;" onclick="openReportModal()"><i class="fas fa-chart-bar"></i> التقارير اليومية</button>
-            <button class="btn btn-stats" style="margin-top:10px;" onclick="openAdvancedStatsModal()"><i class="fas fa-chart-pie"></i> إحصائيات متقدمة</button>
-        
-            <button class="btn" style="background:#8b5cf6; margin-top:10px;" onclick="let n=prompt('الاسم الجديد للمحل:'); if(n){localStorage.setItem('storeName',n); document.querySelector('#main-system .shop-title h1').innerHTML='🏪 '+n; alert('تم حفظ الاسم');}"><i class="fas fa-store"></i> 🏷️ تغيير اسم المحل</button>
-            <button class="btn btn-dark-red" style="margin-top:10px;" onclick="openDangerZoneModal()"><i class="fas fa-skull-crossbones"></i> منطقة الحذف الخطرة</button>
-            <button class="btn btn-pdf" style="margin-top:10px;" onclick="exportSystemGuidePDF()"><i class="fas fa-file-pdf"></i> 📘 دليل النظام (PDF)</button>
-            
-            <div class="management-grid" style="margin-top:15px;">
-                <button class="btn btn-stats" onclick="openPnLReportModal()"><i class="fas fa-chart-line"></i> أرباح وخسائر</button>
-                <button class="btn btn-cyan" onclick="openAdvancedStatementModal()"><i class="fas fa-search-plus"></i> كشف متقدم</button>
-                <button class="btn btn-purple" onclick="exportBackup()"><i class="fas fa-download"></i> نسخة احتياطية</button>
-              
-                <button class="btn btn-cyan" onclick="restoreFromCloud()"><i class="fas fa-cloud-download-alt"></i> استعادة من Drive</button>
-                <button class="btn" onclick="backupToDrive()" style="background: linear-gradient(145deg, #0f9d58, #4285f4);">
-    <i class="fas fa-cloud-upload-alt"></i> رفع إلى Drive
-</button>
-                <button class="btn btn-indigo" onclick="importBackup()"><i class="fas fa-upload"></i> استعادة نسخة</button>
-            </div>
+    <!-- القسم 1: الفواتير (مخفي في البداية) -->
+    <div id="invoicesSection" style="display: none; margin-top: 15px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+            <button class="btn btn-green btn-sm" onclick="setupInvoice('sale', 'cash')"><i class="fas fa-shopping-cart"></i> بيع كاش</button>
+            <button class="btn btn-red btn-sm" onclick="setupInvoice('sale', 'credit')"><i class="fas fa-clock"></i> بيع آجل</button>
+            <button class="btn btn-blue btn-sm" onclick="setupInvoice('purchase', 'cash')"><i class="fas fa-truck"></i> شراء كاش</button>
+            <button class="btn btn-orange btn-sm" onclick="setupInvoice('purchase', 'credit')"><i class="fas fa-calendar"></i> شراء آجل</button>
+            <button class="btn btn-purple btn-sm" onclick="setupInvoice('sale_return', 'cash')"><i class="fas fa-undo-alt"></i> مرتجع بيع</button>
+            <button class="btn btn-pink btn-sm" onclick="setupInvoice('purchase_return', 'cash')"><i class="fas fa-exchange-alt"></i> مرتجع شراء</button>
         </div>
+    </div>
 
+    <!-- القسم 2: السندات (مخفي في البداية) -->
+    <div id="paymentsSection" style="display: none; margin-top: 15px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+            <button class="btn btn-cyan btn-sm" onclick="openPaymentModal('receipt')"><i class="fas fa-hand-holding-usd"></i> سند قبض</button>
+            <button class="btn" style="background: #f59e0b;" onclick="openPaymentModal('payment')"><i class="fas fa-money-bill-wave"></i> سند صرف</button>
+        </div>
+    </div>
+
+    <!-- القسم 3: النسخ والاستعادة (مخفي في البداية) -->
+    <div id="backupSection" style="display: none; margin-top: 15px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+            <button class="btn btn-purple btn-sm" onclick="exportBackup()"><i class="fas fa-download"></i> نسخة محلية</button>
+            <button class="btn btn-sm" onclick="backupToDrive()" style="background: linear-gradient(145deg, #0f9d58, #4285f4);"><i class="fas fa-cloud-upload-alt"></i> رفع إلى Drive</button>
+            <button class="btn btn-cyan btn-sm" onclick="restoreFromCloud()"><i class="fas fa-cloud-download-alt"></i> استعادة من Drive</button>
+            <button class="btn btn-indigo btn-sm" onclick="importBackup()"><i class="fas fa-upload"></i> استعادة ملف</button>
+        </div>
+    </div>
+
+    <!-- القسم 4: الإدارة (مخفي في البداية) -->
+    <div id="managementSection" style="display: none; margin-top: 15px;">
+        <div class="management-grid" style="gap: 8px;">
+            <button class="btn btn-gold btn-sm" onclick="openAddProductModal()"><i class="fas fa-box"></i> صنف جديد</button>
+            <button class="btn btn-indigo btn-sm" onclick="openAddCustomerModal()"><i class="fas fa-user-plus"></i> عميل جديد</button>
+            <button class="btn btn-sm" style="background:#d97706" onclick="openAddSupplierModal()"><i class="fas fa-truck"></i> مورد جديد</button>
+            <button class="btn btn-gold btn-sm" onclick="openPriceManager()"><i class="fas fa-tags"></i> تعديل الأسعار</button>
+            <button class="btn btn-sm" style="background:#d97706;" onclick="openSecurityModal()"><i class="fas fa-shield-alt"></i> الأمان</button>
+            <button class="btn btn-sm" style="background:#6366f1;" onclick="archiveYearToDrive()"><i class="fas fa-archive"></i> أرشفة سنة</button>
+            <button class="btn btn-sm" style="background:#d97706;" onclick="openYearEndModal()"><i class="fas fa-calendar-check"></i> الحساب الختامي</button>
+            <button class="btn btn-sm" style="background:#8b5cf6;" onclick="restoreYearFromDrive()"><i class="fas fa-folder-open"></i> استعادة سنة</button>
+            <button class="btn btn-sm" style="background:#8b5cf6;" onclick="showCurrentBalances()"><i class="fas fa-scale-balanced"></i> الأرصدة</button>
+            <button class="btn btn-blue btn-sm" onclick="searchCustomerInvoices()"><i class="fas fa-search"></i> بحث شامل</button>
+            <button class="btn btn-sm" style="background:#8b5cf6;" onclick="openReportModal()"><i class="fas fa-chart-bar"></i> تقرير يومي</button>
+            <button class="btn btn-stats btn-sm" onclick="openAdvancedStatsModal()"><i class="fas fa-chart-pie"></i> إحصائيات</button>
+            <button class="btn btn-sm" style="background:#8b5cf6;" onclick="let n=prompt('الاسم الجديد للمحل:'); if(n){localStorage.setItem('storeName',n); document.querySelector('#main-system .shop-title h1').innerHTML='🏪 '+n; alert('تم حفظ الاسم');}"><i class="fas fa-store"></i> تغيير الاسم</button>
+            <button class="btn btn-dark-red btn-sm" onclick="openDangerZoneModal()"><i class="fas fa-skull-crossbones"></i> منطقة الحذف</button>
+            <button class="btn btn-pdf btn-sm" onclick="exportSystemGuidePDF()"><i class="fas fa-file-pdf"></i> دليل النظام</button>
+            <button class="btn btn-stats btn-sm" onclick="openPnLReportModal()"><i class="fas fa-chart-line"></i> أرباح وخسائر</button>
+            <button class="btn btn-cyan btn-sm" onclick="openAdvancedStatementModal()"><i class="fas fa-search-plus"></i> كشف متقدم</button>
+            <button class="btn btn-outline btn-sm" onclick="toggleAdminPanel()" style="background:var(--gold); color:#000;"><i class="fas fa-table-list"></i> لوحة السجلات</button>
+        </div>
+    </div>
+
+    <!-- زر كشف حساب منفرد خارج الأقسام -->
+    <button class="btn btn-statement" style="margin-top:15px;" onclick="openStatementModal()"><i class="fas fa-file-invoice"></i> 📑 كشف حساب</button>
+</div>
         <button class="btn btn-outline" onclick="toggleAdminPanel()" style="margin-bottom:15px;"><i class="fas fa-cogs"></i> لوحة السجلات</button>
 
         <div id="adminSection" class="glass-card">
@@ -2756,15 +2776,23 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzTbi9mJCHSdWGGqnhqg
                 }
             }
             
-            // تحديث رصيد العميل/المورد
-            if (activeMode === 'credit') {
-                const contact = await contactsStore.getItem(finalContactId);
-                if (contact) {
-                    if (activeType === 'sale' || activeType === 'purchase_return') contact.balance += total;
-                    else contact.balance -= total;
-                    await contactsStore.setItem(finalContactId, contact);
-                }
-            }
+// تحديث رصيد العميل/المورد
+const contact = await contactsStore.getItem(finalContactId);
+if (contact) {
+    if (activeType === 'sale') {
+        if (activeMode === 'credit') contact.balance += total;
+    } else if (activeType === 'sale_return') {
+        contact.balance -= total;
+    } else if (activeType === 'purchase') {
+        if (activeMode === 'credit') contact.balance -= total;
+    } else if (activeType === 'purchase_return') {
+        contact.balance += total;
+    }
+    await contactsStore.setItem(finalContactId, contact);
+    const conIdx = cachedContacts.findIndex(c => c.id === finalContactId);
+    if (conIdx !== -1) cachedContacts[conIdx] = contact;
+    else cachedContacts.push(contact);
+}
             
             lastSavedInvoice = {
                 id: invoiceId,
@@ -5105,7 +5133,6 @@ window.initMainSystem = async function() {
 };
 
 console.log('✅ نظام مدير النظام - جاهز للعمل');
-
 </script>
 
 <!-- ==================== Service Worker ==================== -->
@@ -7199,207 +7226,210 @@ waitForLibraries(function(ready) {
     console.log('✅ تم تفعيل PDF متعدد الصفحات');
 });
 </script>
+<!-- ==================== نظام التفعيل الذكي (الأولوية الأولى) ==================== -->
 <script>
 (function() {
     "use strict";
+    
+    const LICENSE_URL = "https://script.google.com/macros/s/AKfycbyYHVHqBiJnIQipQEjL2K5ftwR9d0TzH7p_sep-Kmn_SVTthVHhW0Z4lZ4BluZ8V0dCcQ/exec";
+    const APP_KEY = "NASSR_2026";
+    const OFFLINE_LIMIT_DAYS = 30;
+    const CHECK_INTERVAL_HOURS = 6;
 
-    // 1. وظيفة الإظهار الفوري
-    function forceAccess() {
-        const hasLicense = localStorage.getItem("license_code");
-        const hasExpiry = localStorage.getItem("offline_expiry");
+    // ============ 1. إخفاء كل شيء فوراً ============
+    const portal = document.getElementById('portal-screen');
+    const mainSys = document.getElementById('main-system');
+    if (portal) portal.style.display = 'none';
+    if (mainSys) mainSys.style.display = 'none';
 
-        // إذا كان التطبيق قد تم تفعيله سابقاً على هذا الهاتف
-        if (hasLicense && hasExpiry) {
-            // حذف أي شاشات حجب (سواء كانت قفل، تحميل، أو سواد)
-            const blockers = ['lock-screen', 'activation-screen', 'loading-overlay', 'splash-screen'];
-            blockers.forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.remove();
-            });
+    // ============ 2. دوال شاشة القفل ============
+    function showLockScreen(msg, isActivation) {
+        const old = document.getElementById('lock-screen');
+        if (old) old.remove();
 
-            // إجبار شاشة الدخول (portal-screen) على الظهور
-            const portal = document.getElementById('portal-screen');
-            if (portal) {
-                portal.style.setProperty('display', 'block', 'important');
-                portal.style.setProperty('visibility', 'visible', 'important');
-                portal.style.setProperty('opacity', '1', 'important');
-                portal.style.setProperty('z-index', '999999', 'important');
-                portal.style.setProperty('position', 'fixed', 'important');
-                portal.style.setProperty('top', '0', 'important');
-                portal.style.setProperty('left', '0', 'important');
-                portal.style.setProperty('background', '#0a0a0c', 'important');
-            }
+        const lock = document.createElement('div');
+        lock.id = 'lock-screen';
+        lock.style.cssText = "position:fixed; top:0; left:0; width:100%; height:100%; background:#000; z-index:99999999; display:flex; justify-content:center; align-items:center; text-align:center; color:#fff; font-family:Tajawal,sans-serif; flex-direction:column; padding:20px; box-sizing:border-box;";
+        
+        if (isActivation) {
+            lock.innerHTML = `
+                <div style="border:2px solid #d4af37; padding:30px; border-radius:15px; max-width:400px; width:100%;">
+                    <h2 style="color:#d4af37;">🔐 تفعيل النسخة</h2>
+                    <p style="color:#ccc;">أدخل كود التفعيل</p>
+                    <input type="text" id="license_input" placeholder="XXXX-XXXX" style="width:100%; padding:12px; margin:15px 0; text-align:center; font-size:18px; border-radius:8px; border:1px solid #d4af37; background:#222; color:#fff; box-sizing:border-box;">
+                    <button id="activate_btn" style="width:100%; padding:12px; background:#d4af37; color:#000; border:none; font-weight:bold; border-radius:8px; font-size:16px; cursor:pointer;">✅ تفعيل</button>
+                    <p id="stMsg" style="margin-top:10px; font-size:13px; color:#f59e0b; min-height:20px;"></p>
+                </div>`;
+        } else {
+            lock.innerHTML = `
+                <div style="border:2px solid #d4af37; padding:30px; border-radius:15px; max-width:400px; width:100%;">
+                    <h2 style="color:#d4af37;">🛡️ نظام الحماية</h2>
+                    <p>${msg}</p>
+                    <button onclick="location.reload()" style="width:100%; padding:12px; background:#d4af37; color:#000; border:none; font-weight:bold; border-radius:8px; font-size:16px; cursor:pointer;">🔄 إعادة المحاولة</button>
+                </div>`;
+        }
+        
+        document.body.appendChild(lock);
 
-            // إخفاء النظام الرئيسي (ليظل خلف شاشة الدخول)
-            const mainSys = document.getElementById('main-system');
-            if (mainSys) mainSys.style.display = 'none';
+        if (isActivation) {
+            document.getElementById('activate_btn').onclick = processActivation;
+            document.getElementById('license_input').onkeypress = function(e) { if (e.key === 'Enter') processActivation(); };
+            setTimeout(() => { const inp = document.getElementById('license_input'); if (inp) inp.focus(); }, 300);
         }
     }
 
-    // 2. التنفيذ الفوري والمتكرر (لمنع التعليق)
-    forceAccess();
-    
-    // تكرار الفحص كل ثانية (لإزالة أي شاشة سوداء قد تظهر فجأة)
-    const fastInterval = setInterval(forceAccess, 1000);
-    
-    // إيقاف التكرار بعد 10 ثوانٍ لتوفير موارد الهاتف
-    setTimeout(() => clearInterval(fastInterval), 10000);
-
-    // 3. معالجة مشكلة الخطوط (سبب السواد الرئيسي في الـ APK بدون نت)
-    if (!navigator.onLine) {
-        const killExternalLinks = () => {
-            document.querySelectorAll('link[href*="http"], script[src*="http"]').forEach(el => {
-                // استثناء المكتبات الأساسية إذا كانت مضافة بروابط CDN
-                if (!el.src || (!el.src.includes('localforage') && !el.src.includes('jspdf'))) {
-                    el.remove();
-                }
-            });
-        };
-        killExternalLinks();
-        window.addEventListener('load', killExternalLinks);
+    function hideLockScreen() {
+        const lock = document.getElementById('lock-screen');
+        if (lock) lock.remove();
+        
+        // إظهار شاشة الدخول
+        const p = document.getElementById('portal-screen');
+        const m = document.getElementById('main-system');
+        if (p) {
+            p.style.setProperty('display', 'block', 'important');
+            p.style.setProperty('visibility', 'visible', 'important');
+            p.style.setProperty('opacity', '1', 'important');
+            p.style.setProperty('z-index', '999999', 'important');
+            p.style.setProperty('position', 'fixed', 'important');
+            p.style.setProperty('top', '0', 'important');
+            p.style.setProperty('left', '0', 'important');
+            p.style.setProperty('background', '#0a0a0c', 'important');
+        }
+        if (m) m.style.setProperty('display', 'none', 'important');
     }
 
-    console.log("🚀 محرك الظهور الفوري يعمل الآن");
+    // ============ 3. عملية التفعيل ============
+    async function processActivation() {
+        const code = document.getElementById('license_input')?.value?.trim();
+        const msg = document.getElementById('stMsg');
+        
+        if (!code) { if (msg) msg.innerText = '⚠️ الرجاء إدخال كود التفعيل'; return; }
+        if (msg) msg.innerText = '⏳ جاري الاتصال بالسيرفر...';
+        
+        try {
+            const device = "DEVICE_" + (navigator.userAgent?.length || 10);
+            const ctrl = new AbortController();
+            setTimeout(() => ctrl.abort(), 5000);
+            const res = await fetch(`${LICENSE_URL}?code=${encodeURIComponent(code)}&device=${encodeURIComponent(device)}&key=${APP_KEY}`, { signal: ctrl.signal });
+            const data = await res.json();
+            
+            if (data.success) {
+                const now = Date.now();
+                localStorage.setItem("license_code", code);
+                localStorage.setItem("last_license_check", now.toString());
+                localStorage.setItem("offline_expiry", (now + OFFLINE_LIMIT_DAYS * 24 * 60 * 60 * 1000).toString());
+                if (msg) msg.innerText = '✅ تم التفعيل بنجاح!';
+                setTimeout(() => location.reload(), 800);
+            } else {
+                if (msg) msg.innerText = '❌ ' + (data.message || 'كود غير صالح');
+            }
+        } catch (e) {
+            if (msg) msg.innerText = '📡 خطأ في الاتصال. تأكد من الإنترنت.';
+        }
+    }
+
+    // ============ 4. فحص الأوفلاين ============
+    function checkOfflineValidity() {
+        const offlineExpiry = localStorage.getItem("offline_expiry");
+        const now = Date.now();
+
+        if (!offlineExpiry || now > parseInt(offlineExpiry)) {
+            showLockScreen("⚠️ انتهت فترة السماح بدون إنترنت (30 يوم).<br>يرجى الاتصال بالشبكة لتجديد التفعيل.");
+            return false;
+        } else {
+            const daysLeft = Math.ceil((parseInt(offlineExpiry) - now) / (1000 * 60 * 60 * 24));
+            console.log(`🛡️ يعمل بوضع الأوفلاين. متبقي ${daysLeft} يوم.`);
+            return true;
+        }
+    }
+
+    // ============ 5. المحرك الرئيسي ============
+    async function runLicenseEngine() {
+        const savedCode = localStorage.getItem("license_code");
+        const lastCheck = localStorage.getItem("last_license_check") || "0";
+        const now = Date.now();
+
+        // لا يوجد كود تفعيل
+        if (!savedCode) {
+            showLockScreen("", true);
+            return;
+        }
+
+        // فحص السيرفر كل 6 ساعات
+        const hoursSinceLastCheck = (now - parseInt(lastCheck)) / (1000 * 60 * 60);
+        
+        if (hoursSinceLastCheck >= CHECK_INTERVAL_HOURS) {
+            try {
+                const device = "DEVICE_" + (navigator.userAgent?.length || 10);
+                const ctrl = new AbortController();
+                setTimeout(() => ctrl.abort(), 5000);
+                const response = await fetch(`${LICENSE_URL}?code=${encodeURIComponent(savedCode)}&device=${encodeURIComponent(device)}&key=${APP_KEY}`, { signal: ctrl.signal });
+                const data = await response.json();
+
+                if (data.success) {
+                    localStorage.setItem("last_license_check", now.toString());
+                    localStorage.setItem("offline_expiry", (now + OFFLINE_LIMIT_DAYS * 24 * 60 * 60 * 1000).toString());
+                    hideLockScreen();
+                    console.log("✅ تم التحديث من السيرفر بنجاح");
+                } else {
+                    showLockScreen("🚫 " + (data.message || "تم إيقاف هذا الكود."));
+                    return;
+                }
+            } catch (e) {
+                console.log("📡 تعذر الاتصال بالسيرفر، التحقق من وضع الأوفلاين...");
+                if (!checkOfflineValidity()) return;
+                hideLockScreen();
+            }
+        } else {
+            // لم تمر 6 ساعات
+            if (!checkOfflineValidity()) return;
+            hideLockScreen();
+        }
+        
+        // ============ 6. معالجة الخطوط بدون إنترنت ============
+        if (!navigator.onLine) {
+            const killExternalLinks = () => {
+                document.querySelectorAll('link[href*="http"], script[src*="http"]').forEach(el => {
+                    if (!el.src || (!el.src.includes('localforage') && !el.src.includes('jspdf') && !el.src.includes('html2canvas'))) {
+                        el.remove();
+                    }
+                });
+            };
+            killExternalLinks();
+            window.addEventListener('load', killExternalLinks);
+        }
+    }
+
+    // ============ تشغيل النظام ============
+    runLicenseEngine();
+
+    // تعريض دالة التفعيل
+    window.processActivation = processActivation;
+    
+    console.log("🔐 نظام الترخيص الذكي يعمل");
 })();
 </script>
 
-<script>
-// ==================== نظام التفعيل الذكي (فحص دوري + وضع الأوفلاين) ====================
-const LICENSE_URL = "https://script.google.com/macros/s/AKfycbyYHVHqBiJnIQipQEjL2K5ftwR9d0TzH7p_sep-Kmn_SVTthVHhW0Z4lZ4BluZ8V0dCcQ/exec";
-const APP_KEY = "NASSR_2026"; 
-const OFFLINE_LIMIT_DAYS = 30; // مدة السماح بدون إنترنت
-const CHECK_INTERVAL_HOURS = 6; // الفحص كل 6 ساعات
-
-async function runLicenseEngine() {
-    const savedCode = localStorage.getItem("license_code");
-    const lastCheck = localStorage.getItem("last_license_check") || 0;
-    const now = Date.now();
-
-    // 1. إذا لم يوجد كود تفعيل أصلاً
-    if (!savedCode) {
-        return showActivationModal();
-    }
-
-    // 2. هل يحتاج النظام للفحص الآن؟ (مرت 6 ساعات)
-    const hoursSinceLastCheck = (now - lastCheck) / (1000 * 60 * 60);
-
-    if (hoursSinceLastCheck >= CHECK_INTERVAL_HOURS) {
-        try {
-            const device = "DEVICE_" + navigator.userAgent.length;
-            // محاولة الاتصال بالسيرفر
-            const response = await fetch(`${LICENSE_URL}?code=${savedCode}&device=${device}&key=${APP_KEY}`, { signal: AbortController.timeout(5000).signal });
-            const data = await response.json();
-
-            if (data.success) {
-                // تمديد فترة السماح أوفلاين وتحديث وقت الفحص
-                localStorage.setItem("last_license_check", now.toString());
-                localStorage.setItem("offline_expiry", (now + OFFLINE_LIMIT_DAYS * 24 * 60 * 60 * 1000).toString());
-                hideLockScreen();
-                console.log("✅ تم التحديث من السيرفر بنجاح");
-            } else {
-                // الكود تم إيقافه من السيرفر
-                showLockScreen("🚫 " + data.message);
-                return;
-            }
-        } catch (e) {
-            console.log("📡 تعذر الاتصال بالسيرفر، التحقق من وضع الأوفلاين...");
-            checkOfflineValidity();
-        }
-    } else {
-        // لم تمر 6 ساعات، افحص فقط صلاحية الأوفلاين
-        checkOfflineValidity();
-    }
-}
-
-// دالة فحص صلاحية الـ 30 يوم (أوفلاين)
-function checkOfflineValidity() {
-    const offlineExpiry = localStorage.getItem("offline_expiry");
-    const now = Date.now();
-
-    if (!offlineExpiry || now > parseInt(offlineExpiry)) {
-        showLockScreen("⚠️ انتهت فترة السماح بدون إنترنت (30 يوم). يرجى الاتصال بالشبكة لتجديد التفعيل.");
-    } else {
-        hideLockScreen();
-        const daysLeft = Math.ceil((parseInt(offlineExpiry) - now) / (1000 * 60 * 60 * 24));
-        console.log(`🛡️ يعمل بوضع الأوفلاين. متبقي ${daysLeft} يوم.`);
-    }
-}
-
-// --- دالات الواجهة (نفس السابقة مع تعديلات طفيفة) ---
-
-function showLockScreen(msg) {
-    let lock = document.getElementById('lock-screen');
-    if (!lock) {
-        lock = document.createElement('div');
-        lock.id = 'lock-screen';
-        lock.style = "position:fixed; top:0; left:0; width:100%; height:100%; background:#000; z-index:99999; display:flex; justify-content:center; align-items:center; text-align:center; color:#fff; font-family:sans-serif; flex-direction:column; padding:20px;";
-        document.body.appendChild(lock);
-    }
-    lock.innerHTML = `<div style="border:2px solid #d4af37; padding:30px; border-radius:15px;">
-        <h2 style="color:#d4af37;">نظام الحماية</h2>
-        <p>${msg}</p>
-        <button onclick="location.reload()" style="margin-top:20px; padding:10px 20px; background:#d4af37; border:none; cursor:pointer; font-weight:bold;">إعادة محاولة</button>
-    </div>`;
-}
-
-function hideLockScreen() {
-    const lock = document.getElementById('lock-screen');
-    if (lock) lock.remove();
-}
-
-function showActivationModal() {
-    showLockScreen("يرجى إدخال كود التفعيل");
-    const container = document.querySelector('#lock-screen div');
-    container.innerHTML = `
-        <h2 style="color:#d4af37;">تفعيل النسخة</h2>
-        <input type="text" id="license_input" placeholder="XXXX-XXXX" style="width:100%; padding:10px; margin:15px 0; text-align:center;">
-        <button onclick="processActivation()" style="width:100%; padding:10px; background:#d4af37; color:#000; border:none; font-weight:bold; cursor:pointer;">تفعيل</button>
-        <p id="stMsg" style="margin-top:10px; font-size:12px;"></p>
-    `;
-}
-
-async function processActivation() {
-    const code = document.getElementById('license_input').value;
-    const msg = document.getElementById('stMsg');
-    try {
-        const device = "DEVICE_" + navigator.userAgent.length;
-        const res = await fetch(`${LICENSE_URL}?code=${code}&device=${device}&key=${APP_KEY}`);
-        const data = await res.json();
-        if (data.success) {
-            localStorage.setItem("license_code", code);
-            localStorage.setItem("last_license_check", Date.now().toString());
-            localStorage.setItem("offline_expiry", (Date.now() + OFFLINE_LIMIT_DAYS * 24 * 60 * 60 * 1000).toString());
-            location.reload();
-        } else {
-            msg.innerText = data.message;
-        }
-    } catch (e) { msg.innerText = "خطأ في الاتصال"; }
-}
-
-// تشغيل النظام
-window.addEventListener('load', runLicenseEngine);
-</script>
-</script>
-<!-- ==================== ضمان ظهور شاشة الدخول ==================== -->
+<!-- ==================== ضمان ظهور شاشة الدخول (يحترم الترخيص) ==================== -->
 <script>
 (function() {
     function enforceVisiblePortal() {
+        // لا نعمل شيء إذا لم يكتمل الترخيص
+        const hasLicense = localStorage.getItem("license_code");
+        if (!hasLicense) return;
+        if (document.getElementById('lock-screen')) return;
+        
         const portal = document.getElementById('portal-screen');
         const mainSystem = document.getElementById('main-system');
         if (portal) {
             portal.style.setProperty('display', 'block', 'important');
             portal.style.setProperty('visibility', 'visible', 'important');
             portal.style.setProperty('opacity', '1', 'important');
-            portal.style.setProperty('z-index', '9999999', 'important');
+            portal.style.setProperty('z-index', '999999', 'important');
         }
         if (mainSystem) {
             mainSystem.style.setProperty('display', 'none', 'important');
         }
-        const blockers = ['lock-screen', 'activation-screen', 'loading-overlay'];
-        blockers.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.remove();
-        });
     }
     enforceVisiblePortal();
     let checkCount = 0;
@@ -7423,6 +7453,30 @@ if ('serviceWorker' in navigator) {
             .catch(function(error) {
                 console.log('❌ فشل تسجيل Service Worker:', error.message);
             });
+    });
+}
+</script>
+<script>
+// دالة لإظهار وإخفاء الأقسام
+function toggleSection(sectionId) {
+    const section = document.getElementById(sectionId);
+    if (section.style.display === 'none' || section.style.display === '') {
+        section.style.display = 'block';
+    } else {
+        section.style.display = 'none';
+    }
+}
+
+// إغلاق الأقسام الأخرى تلقائياً عند فتح قسم جديد (اختياري)
+function toggleSectionExclusive(sectionId) {
+    const sections = ['invoicesSection', 'paymentsSection', 'backupSection', 'managementSection'];
+    sections.forEach(id => {
+        const el = document.getElementById(id);
+        if (id === sectionId) {
+            el.style.display = el.style.display === 'none' ? 'block' : 'none';
+        } else {
+            el.style.display = 'none';
+        }
     });
 }
 </script>

@@ -1,5 +1,5 @@
 // ==================== إصدار الكاش ====================
-const CACHE_VERSION = 'v8';
+const CACHE_VERSION = 'v6';
 const STATIC_CACHE = `store-static-${CACHE_VERSION}`;
 const DYNAMIC_CACHE = `store-dynamic-${CACHE_VERSION}`;
 
