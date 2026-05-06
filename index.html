@@ -2143,7 +2143,7 @@ function saveStoreName() {
     let currentPnLData = { startDate: '', endDate: '', revenue: 0, cost: 0, profit: 0 };
 
     const SECRET_PASSWORD = 'شرور'; // كلمة سر الحذف
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw0CMj5KheMJLrJHqedUA8_yOJC21jKsDTwseUfm1Ex720G-mrZXEuhkh824lmYrkfx/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzTbi9mJCHSdWGGqnhqg1dr_F84MQj8zPmrTuX8PDSOm17ldOwXrCHBn30BPW0Rxl72/exec';
     // ==================== دوال مساعدة ====================
     function showToast(message, type = 'success') {
         const toast = document.createElement('div');
@@ -3488,7 +3488,7 @@ if (activeMode === 'credit' && sendSMS && selectedContactPhone) {
 // ==================== دوال النسخ الاحتياطي المصححة والكاملة ====================
 
 // 1. تعريف الرابط (تأكد أنه لا يتكرر في مكان آخر في ملفك)
-const CLOUD_API_URL = 'https://script.google.com/macros/s/AKfycbzTbi9mJCHSdWGGqnhqg1dr_F84MQj8zPmrTuX8PDSOm17ldOwXrCHBn30BPW0Rxl72/exec';
+const CLOUD_API_URL = 'https://script.google.com/macros/s/AKfycbzwK68SfaC_Rq0xJNiOicFSQckYRL_S6lurvIdHW6CywjSRuON8nwanjFh1bRyoMlRl/exec';
 
 // دالة مساعدة لجلب كافة البيانات من التخزين المحلي
 async function getAllProjectData() {
@@ -5105,6 +5105,7 @@ window.initMainSystem = async function() {
 };
 
 console.log('✅ نظام مدير النظام - جاهز للعمل');
+
 </script>
 
 <!-- ==================== Service Worker ==================== -->
@@ -7378,520 +7379,6 @@ async function processActivation() {
 // تشغيل النظام
 window.addEventListener('load', runLicenseEngine);
 </script>
-<script>
-// ============================================================
-// تحويل قائمة الأصناف في الفاتورة إلى مربع بحث ديناميكي
-// ============================================================
-(function() {
-    // الانتظار حتى يتم تحميل الصفحة بالكامل
-    window.addEventListener('load', function() {
-        // مراقبة متكررة للتحقق من ظهور عنصر prodSelect
-        const observer = new MutationObserver(function(mutations, obs) {
-            const prodSelect = document.getElementById('prodSelect');
-            if (prodSelect && prodSelect.tagName === 'SELECT') {
-                obs.disconnect(); // إيقاف المراقبة بعد العثور عليه
-                enhanceProductSelect();
-            }
-        });
-
-        observer.observe(document.body, { childList: true, subtree: true });
-
-        function enhanceProductSelect() {
-            const originalSelect = document.getElementById('prodSelect');
-            if (!originalSelect) return;
-
-            // إنشاء الحاوية الجديدة
-            const container = document.createElement('div');
-            container.style.position = 'relative';
-            container.style.margin = '8px 0';
-            container.style.width = '100%';
-
-            // إنشاء حقل الإدخال (Search Box)
-            const searchInput = document.createElement('input');
-            searchInput.type = 'text';
-            searchInput.placeholder = '🔍 اكتب اسم الصنف للبحث...';
-            searchInput.style.width = '100%';
-            searchInput.style.padding = '12px';
-            searchInput.style.borderRadius = '8px';
-            searchInput.style.border = '1px solid #d4af37';
-            searchInput.style.background = '#222';
-            searchInput.style.color = '#fff';
-            searchInput.style.fontSize = '16px';
-            searchInput.style.boxSizing = 'border-box';
-            searchInput.autocomplete = 'off';
-
-            // إنشاء القائمة المنسدلة المخفية
-            const dropdownList = document.createElement('div');
-            dropdownList.style.position = 'absolute';
-            dropdownList.style.top = '100%';
-            dropdownList.style.left = '0';
-            dropdownList.style.right = '0';
-            dropdownList.style.maxHeight = '250px';
-            dropdownList.style.overflowY = 'auto';
-            dropdownList.style.backgroundColor = '#1a1a2e';
-            dropdownList.style.border = '1px solid #d4af37';
-            dropdownList.style.borderRadius = '8px';
-            dropdownList.style.zIndex = '1000';
-            dropdownList.style.display = 'none';
-            dropdownList.style.marginTop = '4px';
-            dropdownList.style.boxShadow = '0 4px 12px rgba(0,0,0,0.5)';
-
-            // حفظ القائمة الأصلية
-            let allOptions = [];
-            for (let i = 0; i < originalSelect.options.length; i++) {
-                allOptions.push({
-                    value: originalSelect.options[i].value,
-                    text: originalSelect.options[i].text
-                });
-            }
-
-            // دالة تحديث القائمة المنسدلة
-            function updateDropdown(searchTerm) {
-                dropdownList.innerHTML = '';
-                const filtered = allOptions.filter(opt => 
-                    opt.value === '' || // الاحتفاظ بالخيار الفارغ
-                    opt.text.toLowerCase().includes(searchTerm.toLowerCase())
-                );
-
-                if (filtered.length === 0) {
-                    const noResult = document.createElement('div');
-                    noResult.textContent = '❌ لا توجد نتائج';
-                    noResult.style.padding = '12px';
-                    noResult.style.color = '#888';
-                    noResult.style.textAlign = 'center';
-                    dropdownList.appendChild(noResult);
-                } else {
-                    filtered.forEach(opt => {
-                        const item = document.createElement('div');
-                        item.textContent = opt.text;
-                        item.style.padding = '10px 12px';
-                        item.style.cursor = 'pointer';
-                        item.style.borderBottom = '1px solid #333';
-                        item.style.color = '#fff';
-                        item.style.fontSize = '14px';
-                        
-                        item.addEventListener('mouseenter', () => {
-                            item.style.backgroundColor = '#2a2a40';
-                        });
-                        item.addEventListener('mouseleave', () => {
-                            item.style.backgroundColor = '';
-                        });
-                        
-                        item.addEventListener('click', () => {
-                            // تحديد الخيار في الـ select الأصلي
-                            originalSelect.value = opt.value;
-                            searchInput.value = opt.text;
-                            dropdownList.style.display = 'none';
-                            // تشغيل حدث onchange الأصلي
-                            if (typeof onProdChange === 'function') {
-                                onProdChange();
-                            }
-                        });
-                        
-                        dropdownList.appendChild(item);
-                    });
-                }
-            }
-
-            // أحداث حقل البحث
-            searchInput.addEventListener('input', (e) => {
-                updateDropdown(e.target.value);
-                dropdownList.style.display = 'block';
-                // إذا كان الحقل فارغاً، نظف القيمة من الـ select الأصلي
-                if (e.target.value === '') {
-                    originalSelect.value = '';
-                    if (typeof onProdChange === 'function') onProdChange();
-                }
-            });
-
-            searchInput.addEventListener('focus', () => {
-                updateDropdown(searchInput.value);
-                dropdownList.style.display = 'block';
-            });
-
-            searchInput.addEventListener('blur', () => {
-                setTimeout(() => {
-                    dropdownList.style.display = 'none';
-                }, 200);
-            });
-
-            // تعبئة القيمة الأولية إذا كانت موجودة
-            if (originalSelect.value) {
-                const selectedOpt = allOptions.find(o => o.value === originalSelect.value);
-                if (selectedOpt) searchInput.value = selectedOpt.text;
-            }
-
-            // زر مسح البحث (اختياري)
-            const clearBtn = document.createElement('button');
-            clearBtn.innerHTML = '✕';
-            clearBtn.style.position = 'absolute';
-            clearBtn.style.left = '10px';
-            clearBtn.style.top = '50%';
-            clearBtn.style.transform = 'translateY(-50%)';
-            clearBtn.style.background = 'transparent';
-            clearBtn.style.border = 'none';
-            clearBtn.style.color = '#888';
-            clearBtn.style.fontSize = '18px';
-            clearBtn.style.cursor = 'pointer';
-            clearBtn.style.padding = '0 8px';
-            clearBtn.style.height = '100%';
-            clearBtn.style.display = 'none';
-            
-            clearBtn.addEventListener('click', () => {
-                searchInput.value = '';
-                originalSelect.value = '';
-                updateDropdown('');
-                searchInput.focus();
-                if (typeof onProdChange === 'function') onProdChange();
-            });
-            
-            searchInput.addEventListener('input', () => {
-                clearBtn.style.display = searchInput.value ? 'block' : 'none';
-            });
-            
-            container.appendChild(searchInput);
-            container.appendChild(clearBtn);
-            container.appendChild(dropdownList);
-            
-            // إخفاء الـ select الأصلي
-            originalSelect.style.display = 'none';
-            originalSelect.parentNode.insertBefore(container, originalSelect.nextSibling);
-            
-            console.log('✅ تم تفعيل البحث الديناميكي للأصناف');
-        }
-    });
-})();
-</script>
-<script>
-// ============================================================
-// تحويل قائمة الأسماء في الفاتورة إلى مربع بحث ديناميكي
-// ============================================================
-(function() {
-    window.addEventListener('load', function() {
-        const observer = new MutationObserver(function(mutations, obs) {
-            const conSelect = document.getElementById('conSelect');
-            if (conSelect && conSelect.tagName === 'SELECT' && conSelect.options.length > 0) {
-                obs.disconnect();
-                enhanceContactSelect();
-            }
-        });
-        observer.observe(document.body, { childList: true, subtree: true });
-
-        function enhanceContactSelect() {
-            const originalSelect = document.getElementById('conSelect');
-            if (!originalSelect) return;
-
-            // تخزين البيانات الإضافية (phone, name, balance)
-            let allOptions = [];
-            for (let i = 0; i < originalSelect.options.length; i++) {
-                const opt = originalSelect.options[i];
-                allOptions.push({
-                    value: opt.value,
-                    text: opt.text,
-                    phone: opt.dataset.phone || '',
-                    name: opt.dataset.name || '',
-                    balance: opt.dataset.balance || '0'
-                });
-            }
-
-            // إنشاء الحاوية
-            const container = document.createElement('div');
-            container.style.position = 'relative';
-            container.style.margin = '8px 0';
-            container.style.width = '100%';
-
-            // حقل البحث
-            const searchInput = document.createElement('input');
-            searchInput.type = 'text';
-            searchInput.placeholder = '🔍 ابحث عن عميل أو مورد...';
-            searchInput.style.width = '100%';
-            searchInput.style.padding = '12px';
-            searchInput.style.borderRadius = '8px';
-            searchInput.style.border = '1px solid #d4af37';
-            searchInput.style.background = '#222';
-            searchInput.style.color = '#fff';
-            searchInput.style.fontSize = '16px';
-            searchInput.style.boxSizing = 'border-box';
-            searchInput.autocomplete = 'off';
-
-            // القائمة المنسدلة
-            const dropdownList = document.createElement('div');
-            dropdownList.style.position = 'absolute';
-            dropdownList.style.top = '100%';
-            dropdownList.style.left = '0';
-            dropdownList.style.right = '0';
-            dropdownList.style.maxHeight = '250px';
-            dropdownList.style.overflowY = 'auto';
-            dropdownList.style.backgroundColor = '#1a1a2e';
-            dropdownList.style.border = '1px solid #d4af37';
-            dropdownList.style.borderRadius = '8px';
-            dropdownList.style.zIndex = '1000';
-            dropdownList.style.display = 'none';
-            dropdownList.style.marginTop = '4px';
-            dropdownList.style.boxShadow = '0 4px 12px rgba(0,0,0,0.5)';
-
-            function updateDropdown(searchTerm) {
-                dropdownList.innerHTML = '';
-                const filtered = allOptions.filter(opt => 
-                    opt.value === '' || 
-                    opt.value === 'manual' ||
-                    opt.text.toLowerCase().includes(searchTerm.toLowerCase())
-                );
-
-                if (filtered.length === 0) {
-                    const noResult = document.createElement('div');
-                    noResult.textContent = '❌ لا توجد نتائج';
-                    noResult.style.padding = '12px';
-                    noResult.style.color = '#888';
-                    noResult.style.textAlign = 'center';
-                    dropdownList.appendChild(noResult);
-                } else {
-                    filtered.forEach(opt => {
-                        const item = document.createElement('div');
-                        item.textContent = opt.text;
-                        item.style.padding = '10px 12px';
-                        item.style.cursor = 'pointer';
-                        item.style.borderBottom = '1px solid #333';
-                        item.style.color = '#fff';
-                        item.style.fontSize = '14px';
-                        
-                        if (opt.value === 'manual') {
-                            item.style.color = '#d4af37';
-                            item.style.fontWeight = 'bold';
-                        }
-                        
-                        item.addEventListener('mouseenter', () => {
-                            item.style.backgroundColor = '#2a2a40';
-                        });
-                        item.addEventListener('mouseleave', () => {
-                            item.style.backgroundColor = '';
-                        });
-                        
-                        item.addEventListener('click', () => {
-                            originalSelect.value = opt.value;
-                            searchInput.value = opt.text;
-                            dropdownList.style.display = 'none';
-                            
-                            // تحديث البيانات الإضافية في الـ select الأصلي
-                            const selectedOption = originalSelect.options[originalSelect.selectedIndex];
-                            if (selectedOption) {
-                                if (typeof window.selectedContactPhone !== 'undefined') {
-                                    window.selectedContactPhone = selectedOption.dataset.phone || '';
-                                    window.selectedContactName = selectedOption.dataset.name || '';
-                                    window.previousBalance = parseFloat(selectedOption.dataset.balance) || 0;
-                                }
-                            }
-                            
-                            // تشغيل onchange الأصلي
-                            if (typeof toggleManual === 'function') {
-                                toggleManual();
-                            }
-                        });
-                        
-                        dropdownList.appendChild(item);
-                    });
-                }
-            }
-
-            searchInput.addEventListener('input', (e) => {
-                updateDropdown(e.target.value);
-                dropdownList.style.display = 'block';
-                if (e.target.value === '') {
-                    originalSelect.value = '';
-                    if (typeof toggleManual === 'function') toggleManual();
-                }
-            });
-
-            searchInput.addEventListener('focus', () => {
-                updateDropdown(searchInput.value);
-                dropdownList.style.display = 'block';
-            });
-
-            searchInput.addEventListener('blur', () => {
-                setTimeout(() => {
-                    dropdownList.style.display = 'none';
-                }, 200);
-            });
-
-            // تعبئة القيمة الأولية
-            if (originalSelect.value) {
-                const selectedOpt = allOptions.find(o => o.value === originalSelect.value);
-                if (selectedOpt) searchInput.value = selectedOpt.text;
-            }
-
-            container.appendChild(searchInput);
-            container.appendChild(dropdownList);
-            
-            originalSelect.style.display = 'none';
-            originalSelect.parentNode.insertBefore(container, originalSelect.nextSibling);
-            
-            console.log('✅ تم تفعيل البحث الديناميكي للأسماء في الفاتورة');
-        }
-    });
-})();
-</script>
-<script>
-// ============================================================
-// حل بديل وقوي للبحث في سندات القبض والصرف
-// ============================================================
-(function() {
-    // حفظ الدالة الأصلية لفتح نافذة السندات
-    const originalOpenPaymentModal = window.openPaymentModal;
-    
-    // استبدال الدالة الأصلية
-    window.openPaymentModal = function(type) {
-        // استدعاء الدالة الأصلية أولاً
-        if (originalOpenPaymentModal) {
-            originalOpenPaymentModal(type);
-        }
-        
-        // بعد فتح النافذة، انتظر قليلاً ثم حسن القائمة
-        setTimeout(function() {
-            enhancePaymentSelectDirect();
-        }, 150);
-    };
-    
-    function enhancePaymentSelectDirect() {
-        const originalSelect = document.getElementById('paymentContactSelect');
-        if (!originalSelect) return;
-        
-        // إذا تم التحسين مسبقاً، لا نكرر
-        if (originalSelect.parentElement.querySelector('.payment-search-container')) return;
-        if (originalSelect.options.length === 0) return;
-        
-        console.log('🔄 تفعيل البحث في السندات (الطريقة المباشرة)...');
-        
-        // تخزين الخيارات
-        let allOptions = [];
-        for (let i = 0; i < originalSelect.options.length; i++) {
-            const opt = originalSelect.options[i];
-            allOptions.push({
-                value: opt.value,
-                text: opt.text,
-                balance: opt.dataset.balance || '0',
-                phone: opt.dataset.phone || ''
-            });
-        }
-        
-        // حاوية البحث
-        const container = document.createElement('div');
-        container.className = 'payment-search-container';
-        container.style.position = 'relative';
-        container.style.margin = '8px 0';
-        container.style.width = '100%';
-        
-        const searchInput = document.createElement('input');
-        searchInput.type = 'text';
-        searchInput.placeholder = '🔍 ابحث عن اسم...';
-        searchInput.style.width = '100%';
-        searchInput.style.padding = '12px';
-        searchInput.style.borderRadius = '40px';
-        searchInput.style.border = '1px solid #d4af37';
-        searchInput.style.background = '#222';
-        searchInput.style.color = '#fff';
-        searchInput.style.fontSize = '16px';
-        searchInput.style.boxSizing = 'border-box';
-        
-        const dropdownList = document.createElement('div');
-        dropdownList.style.position = 'absolute';
-        dropdownList.style.top = '100%';
-        dropdownList.style.left = '0';
-        dropdownList.style.right = '0';
-        dropdownList.style.maxHeight = '250px';
-        dropdownList.style.overflowY = 'auto';
-        dropdownList.style.backgroundColor = '#1a1a2e';
-        dropdownList.style.border = '1px solid #d4af37';
-        dropdownList.style.borderRadius = '12px';
-        dropdownList.style.zIndex = '10000';
-        dropdownList.style.display = 'none';
-        dropdownList.style.marginTop = '4px';
-        
-        function updateDropdown(searchTerm) {
-            dropdownList.innerHTML = '';
-            const term = searchTerm.toLowerCase();
-            const filtered = allOptions.filter(opt => {
-                let cleanText = opt.text.replace(/\(الرصيد: [\d,]+\)/g, '').trim();
-                return cleanText.toLowerCase().includes(term);
-            });
-            
-            if (filtered.length === 0 && term.length > 0) {
-                const noResult = document.createElement('div');
-                noResult.textContent = '❌ لا توجد نتائج';
-                noResult.style.padding = '12px';
-                noResult.style.color = '#888';
-                noResult.style.textAlign = 'center';
-                dropdownList.appendChild(noResult);
-            } else {
-                filtered.forEach(opt => {
-                    const item = document.createElement('div');
-                    let cleanText = opt.text.replace(/\(الرصيد: [\d,]+\)/g, '').trim();
-                    item.textContent = cleanText;
-                    item.style.padding = '10px 12px';
-                    item.style.cursor = 'pointer';
-                    item.style.borderBottom = '1px solid #333';
-                    item.style.color = '#fff';
-                    item.style.fontSize = '14px';
-                    
-                    item.onclick = function() {
-                        originalSelect.value = opt.value;
-                        searchInput.value = cleanText;
-                        dropdownList.style.display = 'none';
-                        
-                        const bal = parseFloat(opt.balance) || 0;
-                        const balanceSpan = document.getElementById('contactCurrentBalance');
-                        if (balanceSpan) balanceSpan.innerText = Math.abs(bal).toLocaleString();
-                        
-                        if (typeof originalSelect.onchange === 'function') originalSelect.onchange();
-                    };
-                    
-                    dropdownList.appendChild(item);
-                });
-            }
-        }
-        
-        searchInput.oninput = function(e) {
-            updateDropdown(e.target.value);
-            dropdownList.style.display = 'block';
-            if (e.target.value === '') {
-                originalSelect.value = '';
-                const balanceSpan = document.getElementById('contactCurrentBalance');
-                if (balanceSpan) balanceSpan.innerText = '0';
-            }
-        };
-        
-        searchInput.onfocus = function() {
-            updateDropdown(searchInput.value);
-            dropdownList.style.display = 'block';
-        };
-        
-        searchInput.onblur = function() {
-            setTimeout(() => dropdownList.style.display = 'none', 200);
-        };
-        
-        if (originalSelect.value) {
-            const selectedOpt = allOptions.find(o => o.value === originalSelect.value);
-            if (selectedOpt) {
-                let cleanText = selectedOpt.text.replace(/\(الرصيد: [\d,]+\)/g, '').trim();
-                searchInput.value = cleanText;
-            }
-        }
-        
-        container.appendChild(searchInput);
-        container.appendChild(dropdownList);
-        originalSelect.parentNode.insertBefore(container, originalSelect);
-        originalSelect.style.display = 'none';
-        
-        console.log('✅ تم تفعيل البحث في السندات بنجاح');
-    }
-    
-    // محاولة أولية
-    window.addEventListener('load', function() {
-        setTimeout(enhancePaymentSelectDirect, 1000);
-    });
-    
-    console.log('✅ نظام البحث في السندات (البديل) جاهز');
-})();
-</script>
 </script>
 <!-- ==================== ضمان ظهور شاشة الدخول ==================== -->
 <script>
@@ -7939,217 +7426,160 @@ if ('serviceWorker' in navigator) {
     });
 }
 </script>
-</script>
-// ==================== رفع إلى Drive (مع تذكر الإذن - مرة واحدة فقط) ====================
-
-const BACKUP_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw0CMj5KheMJLrJHqedUA8_yOJC21jKsDTwseUfm1Ex720G-mrZXEuhkh824lmYrkfx/exec';
-
-// مفتاح التخزين المحلي لتذكر الإذن
-const TOKEN_STORAGE_KEY = 'drive_permission_granted';
-
-// التحقق مما إذا كان المستخدم قد أعطى الإذن مسبقاً
-function isPermissionGranted() {
-    return localStorage.getItem(TOKEN_STORAGE_KEY) === 'true';
-}
-
-// تسجيل أن المستخدم أعطى الإذن
-function setPermissionGranted() {
-    localStorage.setItem(TOKEN_STORAGE_KEY, 'true');
-}
-
-// دالة الرفع (تطلب الإذن مرة واحدة فقط)
-window.backupToDrive = async function() {
-    if (!navigator.onLine) {
-        if (typeof showToast === 'function') showToast('⚠️ لا يوجد اتصال بالإنترنت', 'error');
-        else alert('⚠️ لا يوجد اتصال بالإنترنت');
-        return;
+<script>
+// ==================== نظام البحث المتقدم ====================
+(function() {
+    'use strict';
+    
+    // دالة تحويل Select إلى Searchable
+    function makeSearchableSelect(selectId, placeholderText) {
+        const select = document.getElementById(selectId);
+        if (!select) return null;
+        
+        // تجنب إضافة البحث مرتين
+        if (select.parentElement.querySelector('.search-input-for-' + selectId)) return;
+        
+        const container = select.parentElement;
+        const searchInput = document.createElement('input');
+        searchInput.type = 'text';
+        searchInput.placeholder = placeholderText || '🔍 بحث...';
+        searchInput.className = 'search-input-for-' + selectId;
+        searchInput.style.cssText = 'width:100%; padding:10px; margin-bottom:10px; border-radius:40px; border:1px solid #d4af37; background:#222; color:#fff; font-size:14px;';
+        
+        select.style.display = 'none';
+        container.insertBefore(searchInput, select);
+        
+        let originalOptions = [];
+        
+        function updateOptions() {
+            originalOptions = [];
+            for (let i = 0; i < select.options.length; i++) {
+                const opt = select.options[i];
+                originalOptions.push({
+                    value: opt.value,
+                    text: opt.text,
+                    phone: opt.dataset.phone || '',
+                    name: opt.dataset.name || '',
+                    balance: opt.dataset.balance || '0'
+                });
+            }
+        }
+        
+        function filterOptions() {
+            const term = searchInput.value.toLowerCase();
+            select.innerHTML = '';
+            
+            const filtered = originalOptions.filter(opt => 
+                opt.text.toLowerCase().includes(term)
+            );
+            
+            filtered.forEach(opt => {
+                const option = document.createElement('option');
+                option.value = opt.value;
+                option.text = opt.text;
+                if (opt.phone) option.dataset.phone = opt.phone;
+                if (opt.name) option.dataset.name = opt.name;
+                if (opt.balance) option.dataset.balance = opt.balance;
+                select.appendChild(option);
+            });
+            
+            if (filtered.length === 1 && term !== '') {
+                select.value = filtered[0].value;
+                if (typeof select.onchange === 'function') select.onchange();
+            }
+        }
+        
+        const observer = new MutationObserver(updateOptions);
+        observer.observe(select, { childList: true, subtree: true });
+        
+        updateOptions();
+        searchInput.addEventListener('input', filterOptions);
+        
+        return searchInput;
     }
     
-    if (typeof setLoading === 'function') setLoading(true);
-    
-    try {
-        // جمع البيانات
-        const products = await productsStore.getAll();
-        const contacts = await contactsStore.getAll();
-        const invoices = await invoicesStore.getAll();
-        const items = await invoiceItemsStore.getAll();
-        const payments = await paymentsStore.getAll();
+    // دالة البحث في جدول المنتجات (تعديل الأسعار)
+    function addProductTableSearch() {
+        const modal = document.getElementById('priceManagerModal');
+        if (!modal) return;
         
-        const backupData = {
-            date: new Date().toISOString(),
-            storeName: localStorage.getItem('storeName') || 'نظامي',
-            products: products,
-            contacts: contacts,
-            invoices: invoices,
-            invoice_items: items,
-            payments: payments
-        };
+        if (modal.querySelector('.product-table-search')) return;
         
-        const backupString = JSON.stringify(backupData, null, 2);
-        const storeName = localStorage.getItem('storeName') || 'نظامي';
-        const fileName = `backup_${storeName}_${Date.now()}.json`;
+        const searchInput = document.createElement('input');
+        searchInput.type = 'text';
+        searchInput.placeholder = '🔍 بحث عن صنف...';
+        searchInput.className = 'product-table-search';
+        searchInput.style.cssText = 'width:100%; padding:12px; margin-bottom:15px; border-radius:40px; border:1px solid #d4af37; background:#222; color:#fff; font-size:14px;';
         
-        // التحقق من الإذن
-        const hasPermission = isPermissionGranted();
+        const title = modal.querySelector('h3');
+        if (title) {
+            title.insertAdjacentElement('afterend', searchInput);
+        } else {
+            modal.querySelector('.glass-card')?.insertBefore(searchInput, modal.querySelector('.glass-card').firstChild);
+        }
         
-        if (!hasPermission) {
-            if (typeof showToast === 'function') showToast('🔐 سيتم فتح نافذة للإذن (مرة واحدة فقط)', 'info');
-            
-            // إنشاء نموذج وإرسال طلب الإذن
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = `${BACKUP_SCRIPT_URL}?action=upload&request_permission=true`;
-            form.target = '_blank';
-            
-            const dataField = document.createElement('input');
-            dataField.type = 'hidden';
-            dataField.name = 'data';
-            dataField.value = backupString;
-            
-            const nameField = document.createElement('input');
-            nameField.type = 'hidden';
-            nameField.name = 'filename';
-            nameField.value = fileName;
-            
-            const storeField = document.createElement('input');
-            storeField.type = 'hidden';
-            storeField.name = 'storeName';
-            storeField.value = storeName;
-            
-            form.appendChild(dataField);
-            form.appendChild(nameField);
-            form.appendChild(storeField);
-            
-            document.body.appendChild(form);
-            form.submit();
-            
-            // نافذة الإذن ستفتح، بعد إغلاقها نسجل أن الإذن تم
-            const checkInterval = setInterval(() => {
-                if (form.target && window[form.target] && window[form.target].closed) {
-                    clearInterval(checkInterval);
-                    setPermissionGranted();
-                    if (typeof showToast === 'function') showToast('✅ تم منح الإذن - يمكنك الرفع مباشرة في المرات القادمة', 'success');
+        searchInput.addEventListener('input', function() {
+            const term = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#priceTableBody tr');
+            rows.forEach(row => {
+                const nameCell = row.cells[0];
+                if (nameCell && nameCell.innerText.toLowerCase().includes(term)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
                 }
-            }, 500);
-            
+            });
+        });
+    }
+    
+    // تعديل دالة setupInvoice
+    const originalSetupInvoice = window.setupInvoice;
+    if (originalSetupInvoice) {
+        window.setupInvoice = function(type, mode) {
+            originalSetupInvoice(type, mode);
             setTimeout(() => {
-                document.body.removeChild(form);
-            }, 2000);
-            
-        } else {
-            // لديه إذن مسبق - رفع مباشر في نفس النافذة (بدون فتح نافذة جديدة)
-            if (typeof showToast === 'function') showToast('☁️ جاري الرفع إلى Drive...', 'info');
-            
-            // إرسال طلب غير متزامن (خلفي) - لا يفتح نافذة جديدة
-            const response = await fetch(`${BACKUP_SCRIPT_URL}?action=upload&authorized=true`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    data: backupString,
-                    filename: fileName,
-                    storeName: storeName
-                })
-            });
-            
-            const result = await response.json();
-            if (result.status === 'success') {
-                if (typeof showToast === 'function') showToast('✅ تم الرفع بنجاح', 'success');
-            } else {
-                throw new Error(result.message);
-            }
+                makeSearchableSelect('prodSelect', '🔍 بحث عن صنف...');
+                makeSearchableSelect('conSelect', '🔍 بحث عن عميل/مورد...');
+            }, 200);
+        };
+    }
+    
+    // تعديل دالة openPaymentModal
+    const originalOpenPayment = window.openPaymentModal;
+    if (originalOpenPayment) {
+        window.openPaymentModal = function(type) {
+            originalOpenPayment(type);
+            setTimeout(() => {
+                makeSearchableSelect('paymentContactSelect', '🔍 بحث عن اسم...');
+            }, 200);
+        };
+    }
+    
+    // تعديل دالة openPriceManager
+    const originalOpenPrice = window.openPriceManager;
+    if (originalOpenPrice) {
+        window.openPriceManager = async function() {
+            if (originalOpenPrice) await originalOpenPrice();
+            setTimeout(addProductTableSearch, 300);
+        };
+    }
+    
+    // تشغيل البحث عند تحميل أي نافذة فاتورة موجودة مسبقاً
+    setInterval(() => {
+        if (document.getElementById('invoiceModal') && document.getElementById('invoiceModal').style.display === 'block') {
+            makeSearchableSelect('prodSelect', '🔍 بحث عن صنف...');
+            makeSearchableSelect('conSelect', '🔍 بحث عن عميل/مورد...');
         }
-        
-    } catch(e) {
-        console.error(e);
-        if (typeof showToast === 'function') showToast('❌ خطأ: ' + e.message, 'error');
-    }
-    
-    if (typeof setLoading === 'function') setLoading(false);
-};
-
-// دالة الاستعادة (تطلب الإذن مرة واحدة فقط)
-window.restoreFromCloud = async function() {
-    if (!navigator.onLine) {
-        if (typeof showToast === 'function') showToast('⚠️ لا يوجد اتصال بالإنترنت', 'error');
-        return;
-    }
-    
-    if (!confirm('⚠️ تحذير: سيتم استبدال جميع البيانات الحالية بنسخة Drive!\nهل تريد المتابعة؟')) return;
-    
-    if (typeof setLoading === 'function') setLoading(true);
-    
-    try {
-        const hasPermission = isPermissionGranted();
-        const storeName = localStorage.getItem('storeName') || 'نظامي';
-        
-        if (!hasPermission) {
-            if (typeof showToast === 'function') showToast('🔐 سيتم فتح نافذة للإذن (مرة واحدة فقط)', 'info');
-            
-            const restoreWindow = window.open(`${BACKUP_SCRIPT_URL}?action=restore&storeName=${encodeURIComponent(storeName)}&request_permission=true`, '_blank', 'width=500,height=600');
-            
-            const checkInterval = setInterval(() => {
-                if (restoreWindow && restoreWindow.closed) {
-                    clearInterval(checkInterval);
-                    setPermissionGranted();
-                    if (typeof showToast === 'function') showToast('✅ تم منح الإذن - يمكنك الاستعادة مباشرة في المرات القادمة', 'success');
-                    if (typeof showToast === 'function') showToast('🔄 يرجى الضغط على استعادة مرة أخرى', 'info');
-                }
-            }, 500);
-            
-        } else {
-            if (typeof showToast === 'function') showToast('☁️ جاري الاستعادة من Drive...', 'info');
-            
-            const response = await fetch(`${BACKUP_SCRIPT_URL}?action=restore&storeName=${encodeURIComponent(storeName)}&authorized=true`, {
-                method: 'GET'
-            });
-            
-            const result = await response.json();
-            
-            if (result.status === 'success' && result.data && result.data.backupData) {
-                const backupData = result.data.backupData;
-                
-                // استعادة البيانات
-                const storeMap = [
-                    { store: productsStore, items: backupData.products },
-                    { store: contactsStore, items: backupData.contacts },
-                    { store: invoicesStore, items: backupData.invoices },
-                    { store: invoiceItemsStore, items: backupData.invoice_items },
-                    { store: paymentsStore, items: backupData.payments }
-                ];
-                
-                for (const entry of storeMap) {
-                    if (entry.items && Array.isArray(entry.items)) {
-                        await entry.store.clear();
-                        for (const item of entry.items) {
-                            if (item && item.id) await entry.store.setItem(item.id, item);
-                        }
-                    }
-                }
-                
-                if (typeof loadMasterDataFromCache === 'function') await loadMasterDataFromCache();
-                if (typeof loadData === 'function') loadData();
-                if (typeof showToast === 'function') showToast('✅ تم استعادة البيانات بنجاح', 'success');
-                setTimeout(() => location.reload(), 1500);
-            } else {
-                throw new Error(result.message || 'لم يتم العثور على نسخة');
-            }
+        if (document.getElementById('paymentModal') && document.getElementById('paymentModal').style.display === 'block') {
+            makeSearchableSelect('paymentContactSelect', '🔍 بحث عن اسم...');
         }
-        
-    } catch(e) {
-        console.error(e);
-        if (typeof showToast === 'function') showToast('❌ فشل الاستعادة: ' + e.message, 'error');
-    }
+        if (document.getElementById('priceManagerModal') && document.getElementById('priceManagerModal').style.display === 'block') {
+            addProductTableSearch();
+        }
+    }, 1000);
     
-    if (typeof setLoading === 'function') setLoading(false);
-};
-
-// زر إعادة تعيين الإذن (في حالة أراد المستخدم تغيير الحساب)
-window.resetDrivePermission = function() {
-    localStorage.removeItem(TOKEN_STORAGE_KEY);
-    if (typeof showToast === 'function') showToast('✅ تم إعادة تعيين الإذن - سيطلب منك تسجيل الدخول مرة أخرى', 'success');
-};
-
-console.log('✅ نظام Drive مع تذكر الإذن - يطلب الإذن مرة واحدة فقط');
+    console.log('✅ نظام البحث التلقائي تم تفعيله');
+})();
 </script>
 </body>
 </html>
